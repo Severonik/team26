@@ -114,7 +114,6 @@ elseif (
 
 			$_SESSION["error_messages"] .= "<p class='mesage_error' >Вы авторизованы</p>";
 
-
 			//Выводим все организации данного аккаунта
 			while($row = mysqli_fetch_array($result_query_select)){
 				$_SESSION["id"] =  $row['id'];
@@ -126,21 +125,25 @@ elseif (
 				$_SESSION["jurAddress_2"] = $row['jurAddress_2'];
 				$_SESSION["fio"] =  '';
 				$_SESSION["passport"] = '';
-
 			}
 
+
+				$count = 0;
 				//Выводим сотрудников этого id
-				while ($row = mysqli_fetch_array($staff)) {
-					$_SESSION["fio"] .= $row['fio'].', ';
-					$_SESSION["passport"] .= $row['passport'].', ';
-		
-				}
-		
+			if($_SESSION["id"]){
+
+						$staff = $mysqli->query("SELECT * FROM staff WHERE id = '".$_SESSION["id"]."'");
+						
+			while ($row = mysqli_fetch_array($staff)) {
+				$_SESSION["fio"] .= $row['fio'].', ';
+				$_SESSION["passport"] .= $row['passport'].', ';
+				$count++;
+			}
+			}
 	
 
 
-			//Запишем количество сотрудников
-			$_SESSION["count"] = $count;
+			 $_SESSION["quant"] = $count;
 			// echo json_encode(array(True));
 			echo json_encode(array(
 				'id'=>$_SESSION["id"],
@@ -153,6 +156,7 @@ elseif (
 				'mail'=> $_SESSION['email'],
 				'fio' => $_SESSION["fio"],
 				'passport'=> $_SESSION["passport"],
+				'quantyti'=> $_SESSION["quant"]
 
 			));
 
